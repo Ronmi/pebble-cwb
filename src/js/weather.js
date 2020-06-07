@@ -37,10 +37,12 @@ module.exports = (function(){
 
         var cur = i;
         c.on('click', 'up', function() {
-            c.hide();
-            if (cur > 0) {
-                show(cur-1);
+            if (cur == 0) {
+                return;
             }
+
+            c.hide();
+            show(cur-1);
         });
 
         c.on('click', 'down', function() {
