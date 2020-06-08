@@ -1,6 +1,8 @@
 {
   "appKeys": {},
-  "capabilities": [],
+  "capabilities": [
+    "configurable"
+  ],
   "companyName": "Shoutloud",
   "longName": "Taiwan Weather",
   "resources": {

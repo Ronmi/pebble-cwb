@@ -1,5 +1,6 @@
 module.exports = (function(){
     var UI = require('ui');
+    var Settings = require('settings');
     
     var cards = [];
 
@@ -17,11 +18,13 @@ module.exports = (function(){
 
     var render = function(data) {
         cards = [];
+        var name = Settings.option('town');
+        if (!name) name = '台中市北屯區';
+        
         for (var i = 0; i < data.temp.length; i++) {
             var cardData = {
-                title: data.time[i] + '0',
-                subtitle: data.date[i],
-                body: formatWeather(
+                title: name,
+                body: data.time[i] + '0' + ' ' + data.date[i] + "\n" + formatWeather(
                     data.temp[i],
                     data.rain[i],
                     data.humid[i]

@@ -20,6 +20,10 @@ module.exports = (function() {
             });
         };
 
+        this.clear = function() {
+            Settings.data(this.key, false);
+        };
+
         this.get = function() {
             var data = Settings.data(this.key);
             if (! data) {

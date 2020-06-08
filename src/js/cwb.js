@@ -2,6 +2,7 @@ module.exports = (function() {
 
     var Cacheable = require('./cache');
     var Promise = require('pinkie-promise');
+    var Settings = require('settings');
 
     function pad0(n) {
         if (n < 10) {
@@ -42,7 +43,11 @@ module.exports = (function() {
     function fetchWeather() {
         return new Promise(function(resolve, rej) {
             var req = new XMLHttpRequest();
-            req.open('GET', 'https://www.cwb.gov.tw/V8/C/W/Town/MOD/3hr/6600800_3hr_PC.html?T=' + genNow());
+            var id = Settings.option('loc');
+            if (!id) {
+                id = '6600800';
+            }
+            req.open('GET', 'https://www.cwb.gov.tw/V8/C/W/Town/MOD/3hr/' + id + '_3hr_PC.html?T=' + genNow());
             req.onreadystatechange = function() {
                 if (req.readyState != 4) return;
                 if (req.status != 200) {
@@ -92,6 +97,7 @@ module.exports = (function() {
                 }
 
                 resolve({
+                    id: id,
                     temp: tempCache,
                     rain: rainCache,
                     humid: humidCache,
@@ -105,6 +111,22 @@ module.exports = (function() {
 
     var weatherData = new Cacheable(5 * 60, "weather", fetchWeather);
 
-    return weatherData;
+    var get = function() {
+        var id = Settings.option('loc');
+        if (!id) id = '6600800';
+
+        return new Promise(function(res, rej) {
+            weatherData.get().then(function(v) {
+                if (v.id != id) {
+                    weatherData.clear();
+                    weatherData.get().then(res)['catch'](rej);
+                }
+                
+                res(v);
+            });
+        });
+    };
+
+    return {get: get};
 
 })();

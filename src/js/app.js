@@ -4,6 +4,11 @@
  * This is where you write your app.
  */
 
+var Settings = require('settings');
+Settings.config({
+    url: 'https://Ronmi.github.com/pebble-cwb/index.html',
+});
+
 var UI = require('ui');
 var weather = require('./weather');
 var cwb = require('./cwb');
